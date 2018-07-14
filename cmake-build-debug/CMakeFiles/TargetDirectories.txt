@@ -1,0 +1,3 @@
+/home/tian/CLionProjects/color_detect/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/tian/CLionProjects/color_detect/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/tian/CLionProjects/color_detect/cmake-build-debug/CMakeFiles/color_detect.dir
