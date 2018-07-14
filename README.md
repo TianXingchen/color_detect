@@ -10,7 +10,7 @@
 
 五、实验结果
 检测蓝色方程序运行结果：
-
+![result](https://github.com/TianXingchen/color_detect/blob/master/cmake-build-debug/result.jpg)
 
 六、源代码及github地址
 #include <iostream>
