@@ -21,8 +21,8 @@
     间、HSV空间或者其它颜色空间都是可行的。之所以选择HSV，是因为H代表的色调基本上可以确定某种颜色，再结合饱和度和亮度信息判断大  
     于某一个阈值。而RGB由三个分量构成，需要判断每种分量的贡献比例，因此在HSV空间中更易于划分颜色。下图是在HSV空间中不同颜色区域。
  ![color](https://github.com/TianXingchen/color_detect/blob/master/cmake-build-debug/color.jpg)  
- 使用inRange()函数将红色和蓝色像素点标记出来，是红色或蓝色则像素值记为255，否则记为0，最后对红色和蓝色像素点进行计数，如果像素  
- 点个数超过全部像素点的三分之二，则判断整幅图为红色或蓝色。  
+ 使用inRange()函数将红色和蓝色像素点标记出来，是红色或蓝色则像素值记为255，否则记为0，最后对红色和蓝色像素点进行计数，如果像素点
+ 个数超过全部像素点的三分之二，则判断整幅图为红色或蓝色。  
  
 5.实验结果
 
@@ -43,8 +43,9 @@ using namespace cv;
 using namespace std;
 
 int main( int argc, char** argv )
-{
-    //红色在HSV空间中有两个分布区间
+{  
+//红色在HSV空间中有两个分布区间  
+
     int R_LowH1 = 0;     //red1 in HSV
     int R_HighH1 = 10;
 
