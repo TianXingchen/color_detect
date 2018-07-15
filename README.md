@@ -26,9 +26,9 @@
 
 ![result](https://github.com/TianXingchen/color_detect/blob/master/cmake-build-debug/result.jpg)
 
-6.源代码及github地址
+6.源代码及github地址  
 
-#include "iostream"
+#include <iostream>  
     
 #include "opencv2/highgui/highgui.hpp"  
 
@@ -36,60 +36,78 @@
 
 using namespace cv;  
 
-using namespace std ;
+using namespace std;
 
 int main( int argc, char** argv )
 {
-    namedWindow("Control", CV_WINDOW_AUTOSIZE); //创建名为“control”的窗口
 
-    int iLowH = 100;
-    int iHighH = 140;
+    namedWindow("Control", CV_WINDOW_AUTOSIZE); //create a window called "Control"
 
-    int iLowS = 90;
-    int iHighS = 255;
+    int R_LowH1 = 0;     //red1 in HSV
+    int R_HighH1 = 10;
 
-    int iLowV = 90;
-    int iHighV = 255;
+    int R_LowS1 = 43;
+    int R_HighS1 = 255;
 
-    //在“control”窗口中创建滑动条
-    cvCreateTrackbar("LowH", "Control", &iLowH, 179); 	//H (0 - 179)
-    cvCreateTrackbar("HighH", "Control", &iHighH, 179);
+    int R_LowV1 = 46;
+    int R_HighV1 = 255;
 
-    cvCreateTrackbar("LowS", "Control", &iLowS, 255); 		//S (0 - 255)
-    cvCreateTrackbar("HighS", "Control", &iHighS, 255);
+    int R_LowH2 = 156;    //red2 in HSV
+    int R_HighH2 = 180;
 
-    cvCreateTrackbar("LowV", "Control", &iLowV, 255); 	//V (0 - 255)
-    cvCreateTrackbar("HighV", "Control", &iHighV, 255);
-     Mat img=imread("robot.jpg");		//读入名为“robot.jpg”的图片
-    Size size=Size(400,400);
-    Mat imgOriginal=Mat(size,CV_32S);
-    resize(img,imgOriginal,size);		   //调整尺寸
-    while (true)
+    int R_LowS2 = 43;
+    int R_HighS2 = 255;
+
+    int R_LowV2 = 46;
+    int R_HighV2 = 255;
+
+    int B_LowH = 100;       //blue in HSV
+    int B_HighH = 124;
+
+    int B_LowS = 43;
+    int B_HighS = 255;
+
+    int B_LowV = 46;
+    int B_HighV = 255;
+
+    Mat imgOriginal=imread("blue.jpg");
+
+    Mat B_imgThresholded,R_imgThresholded1,R_imgThresholded2;
+    unsigned int number=imgOriginal.cols*imgOriginal.rows;
+    unsigned int number_threshold=number*2/3;
+    unsigned int B_not_zero_num=0,R_not_zero_num=0,R_not_zero_num1=0,R_not_zero_num2=0;
+
+    Mat imgHSV;
+    vector<Mat> hsvSplit;
+    cvtColor(imgOriginal, imgHSV, COLOR_BGR2HSV); //Convert the captured frame from BGR to HSV
+
+    //因为我们读取的是彩色图，直方图均衡化需要在HSV空间做
+    split(imgHSV, hsvSplit);
+    equalizeHist(hsvSplit[2],hsvSplit[2]);
+    merge(hsvSplit,imgHSV);
+
+    inRange(imgHSV, Scalar(B_LowH, B_LowS, B_LowV), Scalar(B_HighH, B_HighS, B_HighV), B_imgThresholded); //Threshold the image
+    inRange(imgHSV, Scalar(R_LowH1, R_LowS1, R_LowV1), Scalar(R_HighH1, R_HighS1, R_HighV1), R_imgThresholded1);
+    inRange(imgHSV, Scalar(R_LowH2, R_LowS2, R_LowV2), Scalar(R_HighH2, R_HighS2, R_HighV2), R_imgThresholded2);
+    B_not_zero_num=countNonZero(B_imgThresholded);
+    R_not_zero_num1=countNonZero(R_imgThresholded1);
+    R_not_zero_num2=countNonZero(R_imgThresholded2);
+    R_not_zero_num=R_not_zero_num1+R_not_zero_num2;
+
+    if(B_not_zero_num>=number_threshold)
     {
-        Mat imgHSV;
-        vector<Mat> hsvSplit;
-        cvtColor(imgOriginal, imgHSV, COLOR_BGR2HSV); //将原图从GRB空间转换的HSV空间 
-        //因为我们读取的是彩色图，直方图均衡化需要在HSV空间做
-        split(imgHSV, hsvSplit);		//将imgHSV进行通道分离
-        equalizeHist(hsvSplit[2],hsvSplit[2]);//直方图均衡化，增强对比度
-        merge(hsvSplit,imgHSV);		//将分离后的通道合并
-        Mat imgThresholded;
-
-        inRange(imgHSV, Scalar(iLowH, iLowS, iLowV), Scalar(iHighH, iHighS, iHighV), imgThresholded); //生成满足所要求颜色范围的二值化图像，所要检测的颜色区域为白色，其余为黑色。
-
-        //开操作 (去除一些噪点)
-        Mat element = getStructuringElement(MORPH_RECT, Size(5, 5));// 函数会返回尺寸为5*5的矩形结构元素
-        morphologyEx(imgThresholded, imgThresholded, MORPH_OPEN, element);// 先腐蚀后膨胀，放大裂缝和低密度区域，消除小物体，在平滑较大物体的边界时，不改变其面积
-
-        //闭操作 (连接一些连通域)
-        morphologyEx(imgThresholded, imgThresholded, MORPH_CLOSE, element);// 先膨胀后腐蚀，排除小型黑洞，突触了比原图轮廓区域更暗的区域
-
-        imshow("Thresholded Image", imgThresholded); 
-        imshow("Original", imgOriginal); 
-        char key = (char) waitKey(300);
-        if(key == 27)
-            break;
+        cout<<"picture color is:blue"<<endl;
+        return 1;
     }
+
+    if(R_not_zero_num>=number_threshold)
+    {
+        cout<<"picture color is:red"<<endl;
+        return 2;
+    }
+
+    cout<<"picture color is not blue or red"<<endl;
+
     return 0;
 }
 
