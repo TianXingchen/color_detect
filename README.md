@@ -24,7 +24,7 @@
 
 检测蓝色方程序运行结果：  
 
-![result](https://github.com/TianXingchen/color_detect/blob/master/cmake-build-debug/result.jpg)
+![result](https://github.com/TianXingchen/color_detect/blob/master/cmake-build-debug/result.JPG)
 
 6.源代码及github地址  
 
