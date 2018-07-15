@@ -120,4 +120,4 @@ int main( int argc, char** argv )
 }
 
 
-GitHub地址：https://github.com/TianXingchen/ubiquitous-computing-machine/edit/master/README.md
+GitHub地址：https://github.com/TianXingchen/color_detect/blob/master/README.md
