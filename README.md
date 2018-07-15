@@ -20,8 +20,10 @@
     颜色，但是除了RGB颜色 空间，还存在HSV颜色空间，在识别颜色的时候我们需要在HSV空间进行。对于图像而言，识别相应的颜色在RGB空  
     间、HSV空间或者其它颜色空间都是可行的。之所以选择HSV，是因为H代表的色调基本上可以确定某种颜色，再结合饱和度和亮度信息判断大  
     于某一个阈值。而RGB由三个分量构成，需要判断每种分量的贡献比例，因此在HSV空间中更易于划分颜色。下图是在HSV空间中不同颜色区域。
- ![color](https://github.com/TianXingchen/color_detect/blob/master/cmake-build-debug/color.jpg)
-
+ ![color](https://github.com/TianXingchen/color_detect/blob/master/cmake-build-debug/color.jpg)  
+ 使用inRange()函数将红色和蓝色像素点标记出来，是红色或蓝色则像素值记为255，否则记为0，最后对红色和蓝色像素点进行计数，如果像素  
+ 点个数超过全部像素点的三分之二，则判断整幅图为红色或蓝色。  
+ 
 5.实验结果
 
 检测蓝色方程序运行结果：  
@@ -83,9 +85,9 @@ int main( int argc, char** argv )
     cvtColor(imgOriginal, imgHSV, COLOR_BGR2HSV); //将原图转换到HSV空间
 
     //因为我们读取的是彩色图，直方图均衡化需要在HSV空间做
-    split(imgHSV, hsvSplit);
+    split(imgHSV, hsvSplit);                //分离通道
     equalizeHist(hsvSplit[2],hsvSplit[2]);  //增强对比度
-    merge(hsvSplit,imgHSV);
+    merge(hsvSplit,imgHSV);                 //合并通道
     
     //确定红蓝像素点，存储为黑白图
     inRange(imgHSV, Scalar(B_LowH, B_LowS, B_LowV), Scalar(B_HighH, B_HighS, B_HighV), B_imgThresholded); 
