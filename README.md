@@ -45,6 +45,7 @@ using namespace std;
 int main( int argc, char** argv )
 {  
     //红色在HSV空间中有两个分布区间
+    
     int R_LowH1 = 0;     //red1 in HSV
     int R_HighH1 = 10;
 
