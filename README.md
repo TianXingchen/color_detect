@@ -32,8 +32,8 @@
 
 6.源代码及github地址  
 
-#include <iostream>  
-    
+#include "iostream"  
+
 #include "opencv2/highgui/highgui.hpp"  
 
 #include "opencv2/imgproc/imgproc.hpp"  
@@ -44,8 +44,7 @@ using namespace std;
 
 int main( int argc, char** argv )
 {  
-//红色在HSV空间中有两个分布区间  
-
+    //红色在HSV空间中有两个分布区间
     int R_LowH1 = 0;     //red1 in HSV
     int R_HighH1 = 10;
 
